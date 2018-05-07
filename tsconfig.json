@@ -1,0 +1,20 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+		"declaration": true,
+    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "sourceMap": true,
+    "target": "ES2017",
+    "types": [ "node" ],
+    "strictNullChecks": true
+  },
+  "include": [
+    "index.ts",
+    "rethinkdb.d.ts"
+  ],
+  "exclude": []
+}

@@ -1,0 +1,9 @@
+# From .gitignore
+/npm-debug.log
+
+# Additions for .npmignore only
+/test/
+/.npmignore
+/History.md
+/index.html
+/Makefile
