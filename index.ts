@@ -17,6 +17,7 @@ export function connect(db: string, host: string = "rethinkdb") {
     r = require("rethinkdbdash")({
         db: db,
         pingInterval: 20,
+        discovery: true,
         servers: [{
             host: host,
             port: 28015
@@ -116,10 +117,12 @@ export async function migrate(migrations: Migrations, doFirst?: number[]): Promi
     } catch (err) {
         console.log("MIGRATION FATAL FAILURE ", err);
         await (r as any).table("config").get("migration_status").update({value: "fatal"});
-        await (r as any).table("config").get("migration_last_error").replace({id: "migration_last_error", value: JSON.stringify(err, null, 2)});
+        await (r as any).table("config").get("migration_last_error").replace({id: "migration_last_error", value: err instanceof Error ? err.message : JSON.stringify(err, null, 2)});
         process.exit(94);
     }
 }
+
+// Old:
 
 export interface ConfigureOptions {
     tables: {

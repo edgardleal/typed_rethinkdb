@@ -290,7 +290,7 @@ var migrate = exports.migrate = function () {
 
                     case 94:
                         _context2.next = 96;
-                        return r.table("config").get("migration_last_error").replace({ id: "migration_last_error", value: (0, _stringify2.default)(_context2.t1, null, 2) });
+                        return r.table("config").get("migration_last_error").replace({ id: "migration_last_error", value: _context2.t1 instanceof Error ? _context2.t1.message : (0, _stringify2.default)(_context2.t1, null, 2) });
 
                     case 96:
                         process.exit(94);
@@ -354,7 +354,7 @@ var configure = exports.configure = function () {
 
                     case 13:
                         log("WARNING: Should dropping table " + realTables[i] + "...");
-                    // await r.tableDrop(realTables[i]);
+                        // await r.tableDrop(realTables[i]);
 
                     case 14:
                         ++i;
@@ -410,7 +410,7 @@ var configure = exports.configure = function () {
 
                                         case 14:
                                             log("Dropping index " + table + "." + realIndices[_i2] + "...");
-                                        // await (r as any).table(table).indexDrop(realIndices[i]);
+                                            // await (r as any).table(table).indexDrop(realIndices[i]);
 
                                         case 15:
                                             ++_i2;
@@ -537,9 +537,7 @@ var configure = exports.configure = function () {
 
 exports.connect = connect;
 
-function _interopRequireDefault(obj) {
-    return obj && obj.__esModule ? obj : { default: obj };
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var r = void 0;
 var dbName = void 0;
@@ -553,6 +551,7 @@ function connect(db) {
     r = require("rethinkdbdash")({
         db: db,
         pingInterval: 20,
+        discovery: true,
         servers: [{
             host: host,
             port: 28015

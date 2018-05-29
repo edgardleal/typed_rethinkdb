@@ -1,4 +1,3 @@
-
 // From https://github.com/gcanti/typelevel-ts/blob/master/src/index.ts
 type StringOmit<L1 extends string, L2 extends string> = ({ [P in L1]: P } &
     { [P in L2]: never } & { [key: string]: never })[L1]
@@ -199,7 +198,8 @@ interface RDatum<T> extends RStreamOrDatum<T>, PromiseLike<T> {
 
     filter(criteria: (obj: any) => any): RDatum<T>
     filter(obj: any): RDatum<T>
-    contains(obj: any): RDatum<boolean>
+    contains(obj: T extends Array<infer El> ? RDatum<El> | El : never): RDatum<boolean>
+    contains(func: T extends Array<infer El> ? (e: RDatum<El>) => any : never): RDatum<boolean>
     isEmpty(): RDatum<boolean>
     upcase(): RDatum<string>
     downcase(): RDatum<string>
@@ -252,6 +252,7 @@ interface RDatum<T> extends RStreamOrDatum<T>, PromiseLike<T> {
     group(idx: string): RGroupedStream<any, any>
     group(func: (obj: RDatum<any>) => any): RGroupedStream<any, any>
     ungroup(): RArray<{group: any, reduction: any}>
+    groupBy(func: string | ((obj: RDatum<any>) => any), transform: (obj: RArray<any>) => any): RArray<{group: any, reduction: any}>
     forEach(func: (e: RDatum<any>) => any): RDatum<{}>
 
     fold(base: any, func: (acc: RDatum<any>, row: RDatum<any>) => any, options?: {emit: (state: RDatum<any>, row: RDatum<any>, newState: RDatum<any>) => any}): RDatum<any>
@@ -291,7 +292,8 @@ interface RArray<T> extends RDatum<T[]> {
     filter(obj: DeepPartial<RDatumfy<T>>): RArray<T>
     skip(other: any): RArray<T>
     limit(other: any): RArray<T>
-    contains(obj: T): RDatum<boolean>
+    contains(obj: RDatum<T> | T): RDatum<boolean>
+    contains(func: (e: RDatum<T>) => any): RDatum<boolean>
     reduce(func: (a: RDatum<T>, b: RDatum<T>) => any): RDatum<any>
     distinct(): RArray<T>
     sample(count: number | RDatum<number>): RArray<T>
@@ -320,6 +322,7 @@ interface RArray<T> extends RDatum<T[]> {
 
     group<K extends keyof T>(idx: K): RGroupedStream<T[K], T>
     group(func: (obj: RDatum<T>) => any): RGroupedStream<any, T>
+    groupBy(func: string | ((obj: RDatum<T>) => any), transform: (obj: RArray<T>) => any): RArray<{group: any, reduction: any}>
     forEach(func: (e: RDatum<T>) => any): RDatum<{}>
 
     slice(startOffset: number | RDatum<number>, endOffset: number | RDatum<number>): RArray<T>
@@ -366,6 +369,7 @@ interface RStream<T, IndexNames extends string = never> extends PromiseLike<T[]>
 
     group<K extends keyof T>(idx: K): RGroupedStream<T[K], T>
     group(func: (obj: RDatum<T>) => any): RGroupedStream<any, T>
+    groupBy(func: string | ((obj: RDatum<T>) => any), transform: (obj: RArray<T>) => any): RArray<{group: any, reduction: any}>
     forEach(func: (e: RDatum<T>) => any): RDatum<{}>
     fold(base: any, func: (acc: RDatum<any>, row: RDatum<any>) => any, options?: {emit: (state: RDatum<any>, row: RDatum<any>, newState: RDatum<any>) => any}): RDatum<any>
 
