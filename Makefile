@@ -4,7 +4,7 @@ node_modules/: package.json
 
 
 index.js: index.ts
-	yarn
+	yarn tsc
 
 build: index.js
 	node node_modules/babel-cli/bin/babel.js index.js -o index.js

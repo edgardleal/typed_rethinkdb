@@ -551,7 +551,7 @@ function connect(db) {
     r = require("rethinkdbdash")({
         db: db,
         pingInterval: 20,
-        discovery: true,
+        discovery: process.env.DISCOVERY && process.env.DISCOVERY === "true",
         servers: [{
             host: host,
             port: 28015
