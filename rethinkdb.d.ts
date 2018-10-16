@@ -1,8 +1,8 @@
 // From https://github.com/gcanti/typelevel-ts/blob/master/src/index.ts
-type StringOmit<L1 extends string, L2 extends string> = ({ [P in L1]: P } &
+type StringOmit<L1 extends string | number | symbol, L2 extends string | number | symbol> = ({ [P in L1]: P } &
     { [P in L2]: never } & { [key: string]: never })[L1]
 
-type ObjectOmit<O, K extends string> = Pick<O, StringOmit<keyof O, K>>
+type ObjectOmit<O, K extends string | number | symbol> = Pick<O, StringOmit<keyof O, K>>
 
 type ObjectOptional<O, K extends keyof O> = ObjectOmit<O, K> & Partial<Pick<O, K>>
 
@@ -167,13 +167,14 @@ interface RStreamOrDatum<T> {
 interface RDatum<T> extends RStreamOrDatum<T>, PromiseLike<T> {
     reduce(func: (a: RDatum<any>, b: RDatum<any>) => any): RDatum<any>
     run(): PromiseLike<T>
-    do<X extends RPrimitive>(func: (obj: this) => X): RDatum<X>
+    // do<X extends RPrimitive>(func: (obj: this) => X): RDatum<X>
     do(func: (obj: this) => any): RDatum<any>
-    default<X extends RPrimitive>(val: X): RDatum<T|X>
+    // default<X extends RPrimitive>(val: X): RDatum<T|X>
     default(val: any): RDatum<any>
     <K extends keyof T>(idx: K): RDatum<T[K]>
     (idx: number | RDatum<any>): RDatum<any>
-    orderBy(field: string | R_Sorting<string> | ((e: RDatum<any>) => any)): RArray<any>
+    // orderBy(field: string | R_Sorting<string> | ((e: RDatum<any>) => any)): RArray<any>
+    orderBy(field: any): RArray<any>
     merge(op: (e: RDatum<any>) => any): RDatum<any>
     merge(op: any): RDatum<any>
     map(func: (e: RDatum<any>) => any): RArray<any>
@@ -477,11 +478,13 @@ interface RTable<T extends BaseDocument, IndexNames extends string = string> ext
     indexCreate(name: (keyof T) & IndexNames, opts?: {multi?: boolean, geo?: boolean}): RDatum<{created: 1}>
     indexDrop(name: string): RDatum<{dropped: 1}>
     indexStatus(...names: string[]): RArray<R_IndexStatus>
+    indexWait(...names: string[]): RArray<R_IndexStatus>
 
     getAll(id: any, opts?: {index: IndexNames}): RTableSlice<T, IndexNames>
     getAll(id1: any, id2: any, opts?: {index: IndexNames}): RTableSlice<T, IndexNames>
     getAll(id1: any, id2: any, id3: any, opts?: {index: IndexNames}): RTableSlice<T, IndexNames>
     getAll(id1: any, id2: any, id3: any, id4: any, opts?: {index: IndexNames}): RTableSlice<T, IndexNames>
+    getAll(id1: any, id2: any, id3: any, id4: any, id5: any, opts?: {index: IndexNames}): RTableSlice<T, IndexNames>
     between(lower: any, upper: any, opts?: {index: IndexNames, leftBound?: "closed" | "open", rightBound?: "closed" | "open"}): RTableSlice<T, IndexNames>
 
     getNearest(id: RPoint, opts: { index: IndexNames, maxResults?: number, unit?: "m" | "km" | "mi" | "nm" | "ft", maxDist?: number, geoSystem?: "WGS84" | "unit_sphere" }): RArray<{doc: T, dist: number}>

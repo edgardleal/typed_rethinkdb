@@ -2,10 +2,10 @@
   "main": "index.js",
   "types": "index.d.ts",
   "name": "typed_rethinkdb",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "scripts": {
-      "tsc": "node_modules/typescript/bin/tsc",
-      "build": "node node_modules/babel-cli/bin/babel.js index.js -o index.js"
+    "tsc": "node_modules/typescript/bin/tsc",
+    "build": "node node_modules/babel-cli/bin/babel.js index.js -o index.js"
   },
   "babel": {
     "plugins": [
@@ -25,6 +25,6 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
-    "typescript": "^2.8.1"
+    "typescript": "^3.0.1"
   }
 }
